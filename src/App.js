@@ -1,23 +1,48 @@
-import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
+import FoodBox from './components/FoodBox';
+import foods from "./foods.json";
+import { Row, Divider, Button, Input } from 'antd';
+import AddFoodForm from './components/AddFoodForm';
 
 function App() {
+
+  const [foodList, setFoodList] = useState(foods);
+
+  const [search, setSearch] = useState('');
+
+  const [formShown, setFormShown] = useState(false);
+
+  const handleSearch = (e) => {
+    setSearch(e.target.value)
+  }
+
+  const handleAddFood = (newFood) => {
+    setFoodList([...foodList, newFood]);
+  }
+
+  const handleDelete = (index) => {
+    const newList = foodList.filter((food, i) => i !== index);
+    setFoodList(newList);
+  }
+
+  const handleShowform = () => {
+    setFormShown(prev => !prev);
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Input type="text" placeholder='search by name' onChange={handleSearch}/>
+      <Button onClick={handleShowform}> Hide Form / Add New Food </Button>
+      {formShown && <AddFoodForm handleAddFood={handleAddFood}/>}
+      <Divider>Food List</Divider>
+      <Row style={{ width: '100%', justifyContent: 'center' }}>
+        {foodList.filter(food => food.name.toLowerCase().includes(search.toLowerCase())).map((food, i) => {
+          return (
+            <FoodBox key={i} food={food} index={i} handleDelete={handleDelete} />
+          )
+        })}
+      </Row>
     </div>
   );
 }
