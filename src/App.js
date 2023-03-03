@@ -33,7 +33,7 @@ function App() {
   return (
     <div className="App">
       <Input type="text" placeholder='search by name' onChange={handleSearch}/>
-      <Button onClick={handleShowform}> Hide Form / Add New Food </Button>
+      {formShown ? <Button onClick={handleShowform}> Hide Form </Button> : <Button onClick={handleShowform}> Add New Food </Button>}
       {formShown && <AddFoodForm handleAddFood={handleAddFood}/>}
       <Divider>Food List</Divider>
       <Row style={{ width: '100%', justifyContent: 'center' }}>
